@@ -44,14 +44,16 @@ client.on("ready", async () => {
 
     
     for (const entry of entries) {
-        const command = require(`${entry}`);
-        commands[command.command.name] = {
+        const instance = require(`${entry}`);
+        const command = await instance.getSlashCommand(client, promisePool)
+        commands[command.name] = {
             name: command,
-            command: command
+            instance,
+            command
         }
-        command.onStart(client, promisePool, guildId, version);
+        instance.onStart(client, promisePool, guildId, version);
 
-        updateSlashCommand(command.command)
+        await updateSlashCommand(command)
     }
     /*for (const module in commands) {
         commands[module].command.finishedStart()
@@ -66,7 +68,7 @@ client.on("interactionCreate", async (interaction) => {
 	const module = commands[interaction.commandName]
     
 	try {
-		await module.command.onCommand(interaction);
+		await module.instance.onCommand(interaction);
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
