@@ -64,7 +64,7 @@ async function updateCommands(client) {
         )
         .addStringOption((option) =>
           option
-            .setName("employee")
+            .setName("")
             .setDescription("Name of the employee who served you.")
             .setRequired(true)
             .addChoices(servers)
